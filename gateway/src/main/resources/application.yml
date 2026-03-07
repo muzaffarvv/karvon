@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: gateway
+  config:
+    import: "optional:configserver:http://localhost:8888"
+  profiles:
+    active: local
+  cloud:
+    config:
+      uri: ${CONFIG_URI:http://localhost:8888}
+      password: ${CONFIG_PASSWORD:AS3gKJ$BQsE1FI2aweS&QWDq3fu2h!243ASK$NEGe7bsWeCwe}
+      username: user
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
+    reactor.netty: DEBUG

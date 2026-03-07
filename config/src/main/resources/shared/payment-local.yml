@@ -1,0 +1,19 @@
+#server:
+#  port: ${services.ports.payment}
+#
+#spring:
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: ${PG_URL:jdbc:postgresql://localhost:5432/ssvv}
+#    username: ${PG_USER:postgres}
+#    password: ${PG_PASSWORD:admin}
+#    hikari:
+#      schema: payment
+#  jpa:
+#    open-in-view: false
+#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+#    properties:
+#      hibernate:
+#        default_schema: payment
+#    hibernate:
+#      ddl-auto: update

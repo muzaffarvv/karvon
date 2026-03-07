@@ -1,0 +1,37 @@
+server:
+  port: ${services.ports.gateway}
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost/gateway
+      auto-index-creation: true
+  cloud:
+    gateway:
+      restricted-paths:
+        - /api/v1/[a-zA-Z]+/internal/.*
+      global-filter:
+        - LoggingGlobalFilter
+        - RestrictedPathFilter
+      routes:
+
+#        - id: payment-route
+#          uri: ${services.hosts.payment}
+#          predicates:
+#            - Path=/api/v1/payment/**
+#          filters:
+#            - RewritePath=/api/v1/payment(?<remaining>/?.*), /${remaining}
+
+        - id: auth-route
+          uri: ${services.hosts.auth}
+          predicates:
+            - Path=/api/v1/auth/**
+          filters:
+            - RewritePath=/api/v1/auth(?<remaining>/?.*), /${remaining}
+#
+#        - id: product-route
+#          uri: ${services.hosts.product}
+#          predicates:
+#            - Path=/api/v1/product/**
+#          filters:
+#              - RewritePath=/api/v1/product(?<remaining>/?.*), /${remaining}
+
