@@ -44,10 +44,10 @@ abstract class BaseEntity(
 @Entity
 @Table(name = "products")
 class Product(
-    @Column(nullable = false)
+    @Column(nullable = false, length = 72)
     var name: String,
 
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 160)
     var description: String? = null,
 
     @Column(nullable = false)
