@@ -14,6 +14,15 @@ class ProductMapper {
         )
     }
 
+    fun update(product: Product, request: ProductUpdateRequest): Product {
+        product.name = request.name
+        product.description = request.description
+        product.price = request.price
+        product.stockQuantity = request.stockQuantity
+        product.active = request.active
+        return product
+    }
+
     fun toResponse(product: Product): ProductResponse {
         return ProductResponse(
             id = product.id,
@@ -26,14 +35,5 @@ class ProductMapper {
             updatedAt = product.updatedAt,
             deleted = product.deleted
         )
-    }
-
-    fun update(product: Product, request: ProductUpdateRequest): Product {
-        product.name = request.name
-        product.description = request.description
-        product.price = request.price
-        product.stockQuantity = request.stockQuantity
-        product.active = request.active
-        return product
     }
 }
