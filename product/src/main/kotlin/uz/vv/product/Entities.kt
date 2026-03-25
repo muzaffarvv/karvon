@@ -36,6 +36,10 @@ abstract class BaseEntity(
     var updatedBy: UUID? = null,
 
     @Column(nullable = false)
+    @ColumnDefault("true")
+    var active: Boolean = true,
+
+    @Column(nullable = false)
     @ColumnDefault("false")
     var deleted: Boolean = false
 )
@@ -47,6 +51,9 @@ class Product(
     @Column(nullable = false, length = 72)
     var name: String,
 
+    @Column(nullable = false, unique = true, length = 20)
+    var code: String,
+
     @Column(length = 160)
     var description: String? = null,
 
@@ -57,7 +64,22 @@ class Product(
     @ColumnDefault("0")
     var stockQuantity: Int = 0,
 
-    @Column(nullable = false)
-    @ColumnDefault("true")
-    var active: Boolean = true
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    var category: Category
+) : BaseEntity()
+
+
+@Entity
+@Table(name = "categories")
+class Category(
+    @Column(nullable = false, length = 60, unique = true)
+    var name: String,
+
+    @Column(length = 100)
+    var description: String? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    var parent: Category? = null
 ) : BaseEntity()
