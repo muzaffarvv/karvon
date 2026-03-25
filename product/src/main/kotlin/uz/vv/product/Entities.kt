@@ -46,7 +46,7 @@ abstract class BaseEntity(
 
 
 @Entity
-@Table(name = "products")
+@Table(name = "products", schema = "product")
 class Product(
     @Column(nullable = false, length = 72)
     var name: String,
@@ -71,7 +71,7 @@ class Product(
 
 
 @Entity
-@Table(name = "categories")
+@Table(name = "categories", schema = "product")
 class Category(
     @Column(nullable = false, length = 60, unique = true)
     var name: String,
