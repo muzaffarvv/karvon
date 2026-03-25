@@ -20,6 +20,9 @@ data class ProductCreateRequest(
 
     @field:PositiveOrZero(message = "Stock quantity cannot be negative")
     val stockQuantity: Int,
+
+    @field:NotBlank(message = "Category cannot be empty")
+    val categoryId: UUID
 )
 
 data class ProductUpdateRequest(
@@ -36,7 +39,10 @@ data class ProductUpdateRequest(
     @field:PositiveOrZero(message = "Stock quantity cannot be negative")
     val stockQuantity: Int,
 
-    val active: Boolean
+    val active: Boolean,
+
+    @field:NotBlank(message = "Category cannot be empty")
+    val categoryId: UUID
 )
 
 data class ProductResponse(
@@ -47,10 +53,14 @@ data class ProductResponse(
     val price: BigDecimal,
     val stockQuantity: Int,
     val active: Boolean,
+    val categoryId: UUID?,
+    val categoryName: String?,
     val createdAt: Instant?,
     val updatedAt: Instant?,
     val deleted: Boolean
 )
+
+
 
 data class CategoryCreateRequest(
     @field:NotBlank(message = "Name cannot be empty")

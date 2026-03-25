@@ -3,24 +3,26 @@ package uz.vv.product
 import org.springframework.stereotype.Component
 
 @Component
-class ProductMapper {
+class ProductMapper(private val codeGenerator: CodeGenerator) {
 
-    fun toEntity(request: ProductCreateRequest): Product {
+    fun toEntity(request: ProductCreateRequest, category: Category): Product {
         return Product(
             name = request.name,
-            code = generateUniqueCode(), // todo generate unique code
+            code = codeGenerator.getNextPluCode(),
             description = request.description,
             price = request.price,
-            stockQuantity = request.stockQuantity
+            stockQuantity = request.stockQuantity,
+            category = category
         )
     }
 
-    fun updateEntity(product: Product, request: ProductUpdateRequest): Product {
+    fun updateEntity(product: Product, request: ProductUpdateRequest, category: Category): Product {
         product.name = request.name
         product.description = request.description
         product.price = request.price
         product.stockQuantity = request.stockQuantity
         product.active = request.active
+        product.category = category
         return product
     }
 
@@ -33,6 +35,8 @@ class ProductMapper {
             price = product.price,
             stockQuantity = product.stockQuantity,
             active = product.active,
+            categoryId = product.category.id,
+            categoryName = product.category.name,
             createdAt = product.createdAt,
             updatedAt = product.updatedAt,
             deleted = product.deleted
