@@ -7,30 +7,30 @@ import java.math.BigDecimal
 import java.time.Instant
 import java.util.UUID
 
+
 data class ProductCreateRequest(
     @field:NotBlank(message = "Name cannot be empty")
-    @field:Size(max = 72)
+    @field:Size(max = 72, message = "Name must be less than 72 characters")
     val name: String,
 
-    @field:Size(max = 160)
+    @field:Size(max = 160, message = "Description must be less than 160 characters")
     val description: String?,
 
     @field:PositiveOrZero(message = "Price cannot be negative")
     val price: BigDecimal,
 
     @field:PositiveOrZero(message = "Stock quantity cannot be negative")
-    val stockQuantity: Int,
+    val stockQuantity: Int = 0,
 
-    @field:NotBlank(message = "Category cannot be empty")
     val categoryId: UUID
 )
 
 data class ProductUpdateRequest(
     @field:NotBlank(message = "Name cannot be empty")
-    @field:Size(max = 72)
+    @field:Size(max = 72, message = "Name must be less than 72 characters")
     val name: String,
 
-    @field:Size(max = 160)
+    @field:Size(max = 160, message = "Description must be less than 160 characters")
     val description: String?,
 
     @field:PositiveOrZero(message = "Price cannot be negative")
@@ -41,7 +41,6 @@ data class ProductUpdateRequest(
 
     val active: Boolean,
 
-    @field:NotBlank(message = "Category cannot be empty")
     val categoryId: UUID
 )
 
@@ -59,7 +58,6 @@ data class ProductResponse(
     val updatedAt: Instant?,
     val deleted: Boolean
 )
-
 
 
 data class CategoryCreateRequest(
@@ -96,4 +94,13 @@ data class CategoryResponse(
     val createdAt: Instant?,
     val updatedAt: Instant?,
     val deleted: Boolean
+)
+
+
+data class CategoryTreeResponse(
+    val id: UUID?,
+    val name: String,
+    val description: String?,
+    val active: Boolean,
+    val children: List<CategoryTreeResponse> = emptyList()
 )

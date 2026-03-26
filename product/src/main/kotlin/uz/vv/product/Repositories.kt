@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.domain.Specification
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor
+import org.springframework.data.jpa.repository.Query
 import org.springframework.data.jpa.repository.support.JpaEntityInformation
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository
 import org.springframework.data.repository.NoRepositoryBean
@@ -13,6 +14,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
+
 
 @NoRepositoryBean
 interface BaseRepository<T : BaseEntity> : JpaRepository<T, UUID>, JpaSpecificationExecutor<T> {
@@ -50,13 +52,27 @@ class BaseRepositoryImpl<T : BaseEntity>(
         findAll(isNotDeletedSpecification, pageable)
 }
 
+
 @Repository
 interface CategoryRepository : BaseRepository<Category> {
+    fun existsByIdAndDeletedFalse(id: UUID): Boolean
+    fun existsByNameAndDeletedFalse(name: String): Boolean
+    fun existsByNameAndDeletedFalseAndIdNot(name: String, id: UUID): Boolean
+    fun existsByParentIdAndDeletedFalse(parentId: UUID): Boolean
 
+    @Query("""
+        SELECT c FROM Category c
+        LEFT JOIN FETCH c.parent
+        WHERE c.deleted = false
+        ORDER BY c.name
+    """)
+    fun findAllNotDeletedWithParent(): List<Category>
 }
+
 
 @Repository
 interface ProductRepository : BaseRepository<Product> {
-    fun findByCode(code: String): Product?
-    fun findAllByCategoryId(categoryId: UUID): List<Product>
+    fun findByCodeAndActiveTrueAndDeletedFalse(code: String): Product?
+    fun existsByCategoryIdAndDeletedFalse(categoryId: UUID): Boolean
+    fun findAllByCategoryIdAndDeletedFalse(categoryId: UUID): List<Product>
 }
