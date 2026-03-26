@@ -42,40 +42,39 @@ abstract class BaseEntity(
 
 
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", schema = "order")
 class Order(
-    @Column(name = "user_id", nullable = false)
+    @Column( nullable = false)
     var userId: UUID,
 
-    @Column(name = "total_price", nullable = false)
+    @Column(nullable = false, unique = true)
+    var orderNumber: String,
+
+    @Column(nullable = false)
     var totalPrice: BigDecimal = BigDecimal.ZERO,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    var status: OrderStatus = OrderStatus.PENDING,
-
-    @OneToMany(mappedBy = "order", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var items: MutableList<OrderItem> = mutableListOf()
+    @Column(nullable = false, length = 20)
+    var status: OrderStatus = OrderStatus.PENDING
 ) : BaseEntity()
 
 
 @Entity
-@Table(name = "order_items")
+@Table(name = "order_items", schema = "order")
 class OrderItem(
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
-    var order: Order? = null,
+    @JoinColumn(nullable = false)
+    var order: Order,
 
-    @Column(name = "product_id", nullable = false)
+    @Column(nullable = false)
     var productId: UUID,
 
     @Column(nullable = false)
-    var quantity: Int,
+    var quantity: BigDecimal,
 
-    @Column(name = "unit_price", nullable = false)
+    @Column(nullable = false)
     var unitPrice: BigDecimal,
 
-    @Column(name = "total_price", nullable = false)
+    @Column(nullable = false)
     var totalPrice: BigDecimal
 ) : BaseEntity()
-
