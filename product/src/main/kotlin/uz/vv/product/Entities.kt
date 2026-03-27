@@ -60,6 +60,12 @@ class Product(
     @Column(nullable = false)
     var price: BigDecimal,
 
+    /**
+    @Column(nullable = false, precision = 5, scale = 2)
+    @ColumnDefault("0.00") // default 20% markup
+    var profitPercent: BigDecimal = BigDecimal.ZERO // example: 20.00 (%)
+     */
+
     @Column(nullable = false)
     @ColumnDefault("0")
     var stockQuantity: Int = 0,
