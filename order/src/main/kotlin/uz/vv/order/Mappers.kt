@@ -5,14 +5,14 @@ import org.springframework.stereotype.Component
 @Component
 class OrderMapper(private val orderItemMapper: OrderItemMapper) {
 
-    fun toEntity(request: CreateOrderRequest): Order {
+    fun toEntity(request: OrderCreateRequest): Order {
         return Order(
             userId = request.userId,
             orderNumber = request.orderNumber
         )
     }
 
-    fun updateEntity(order: Order, request: UpdateOrderRequest): Order {
+    fun updateEntity(order: Order, request: OrderUpdateRequest): Order {
         request.status?.let { order.status = it }
         request.totalPrice?.let { order.totalPrice = it }
         return order
@@ -46,7 +46,7 @@ class OrderMapper(private val orderItemMapper: OrderItemMapper) {
 @Component
 class OrderItemMapper {
 
-    fun toEntity(request: CreateOrderItemRequest, order: Order): OrderItem {
+    fun toEntity(request: OrderItemCreateRequest, order: Order): OrderItem {
         return OrderItem(
             order = order,
             productId = request.productId,
@@ -56,7 +56,7 @@ class OrderItemMapper {
         )
     }
 
-    fun updateEntity(orderItem: OrderItem, request: UpdateOrderItemRequest): OrderItem {
+    fun updateEntity(orderItem: OrderItem, request: OrderItemUpdateRequest): OrderItem {
         request.quantity?.let { orderItem.quantity = it }
         request.unitPrice?.let { orderItem.unitPrice = it }
         orderItem.totalPrice = orderItem.quantity * orderItem.unitPrice
