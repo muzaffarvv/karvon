@@ -19,16 +19,18 @@ import java.util.UUID
 @NoRepositoryBean
 interface BaseRepository<T : BaseEntity> : JpaRepository<T, UUID>, JpaSpecificationExecutor<T> {
     fun findByIdAndDeletedFalse(id: UUID): T?
-    fun trash(id: UUID): T?
-    fun trashList(ids: List<UUID>): List<T?>
+    fun trash(id: UUID): Boolean
     fun findAllNotDeleted(): List<T>
     fun findAllNotDeleted(pageable: Pageable): Page<T>
 }
 
+
 class BaseRepositoryImpl<T : BaseEntity>(
     entityInformation: JpaEntityInformation<T, UUID>,
-    entityManager: EntityManager,
+    private val entityManager: EntityManager,
 ) : SimpleJpaRepository<T, UUID>(entityInformation, entityManager), BaseRepository<T> {
+
+    private val domainClass: Class<T> = entityInformation.javaType
 
     private val isNotDeletedSpecification = Specification<T> { root, _, cb ->
         cb.equal(root.get<Boolean>("deleted"), false)
@@ -38,18 +40,22 @@ class BaseRepositoryImpl<T : BaseEntity>(
         findByIdOrNull(id)?.takeIf { !it.deleted }
 
     @Transactional
-    override fun trash(id: UUID): T? = findByIdOrNull(id)?.apply {
-        deleted = true
-        save(this)
-    }
+    override fun trash(id: UUID): Boolean {
+        val updatedRows = entityManager.createQuery(
+            "UPDATE ${domainClass.simpleName} e SET e.deleted = true WHERE e.id = :id AND e.deleted = false"
+        )
+            .setParameter("id", id)
+            .executeUpdate()
 
-    @Transactional
-    override fun trashList(ids: List<UUID>): List<T?> = ids.map { trash(it) }
+        return updatedRows > 0
+    }
 
     override fun findAllNotDeleted(): List<T> = findAll(isNotDeletedSpecification)
 
     override fun findAllNotDeleted(pageable: Pageable): Page<T> =
         findAll(isNotDeletedSpecification, pageable)
+
+    private fun findByIdOrNull(id: UUID): T? = findById(id).orElse(null)
 }
 
 

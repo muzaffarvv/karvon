@@ -31,8 +31,7 @@ class ProductServiceImpl(
     @Transactional
     override fun create(request: ProductCreateRequest): ProductResponse {
 
-        val category = categoryRepository.findByIdAndDeletedFalse(request.categoryId)
-            ?: throw CategoryNotFoundException(request.categoryId)
+        val category = getCategoryByIdOrThrow(request.categoryId)
 
         val product = productMapper.toEntity(request, category)
         val saved = productRepository.save(product)
@@ -43,11 +42,8 @@ class ProductServiceImpl(
     @Transactional
     override fun update(id: UUID, request: ProductUpdateRequest): ProductResponse {
 
-        val product = productRepository.findByIdAndDeletedFalse(id)
-            ?: throw ProductNotFoundException(id)
-
-        val category = categoryRepository.findByIdAndDeletedFalse(request.categoryId)
-            ?: throw CategoryNotFoundException(request.categoryId)
+        val product = getByIdOrThrow(id)
+        val category = getCategoryByIdOrThrow(request.categoryId)
 
         val updated = productMapper.updateEntity(product, request, category)
         val saved = productRepository.save(updated)
@@ -57,16 +53,12 @@ class ProductServiceImpl(
 
     @Transactional(readOnly = true)
     override fun getById(id: UUID): ProductResponse {
-        val product = productRepository.findByIdAndDeletedFalse(id)
-            ?: throw ProductNotFoundException(id)
-        return productMapper.toResponse(product)
+        return productMapper.toResponse(getByIdOrThrow(id))
     }
 
     @Transactional(readOnly = true)
     override fun getByCode(code: String): ProductResponse {
-        val product = productRepository.findByCodeAndActiveTrueAndDeletedFalse(code)
-            ?: throw ProductNotFoundException(code)
-        return productMapper.toResponse(product)
+        return productMapper.toResponse(getByCodeOrThrow(code))
     }
 
     @Transactional(readOnly = true)
@@ -86,7 +78,21 @@ class ProductServiceImpl(
 
     @Transactional
     override fun delete(id: UUID) {
-        productRepository.trash(id) ?: throw ProductNotFoundException(id)
+        if (!productRepository.trash(id)) {
+            throw ProductAlreadyDeletedException(id)
+        }
+    }
+
+    private fun getByIdOrThrow(id: UUID): Product {
+        return productRepository.findByIdAndDeletedFalse(id) ?: throw ProductNotFoundException(id)
+    }
+
+    private fun getByCodeOrThrow(code: String): Product {
+        return productRepository.findByCodeAndActiveTrueAndDeletedFalse(code) ?: throw ProductNotFoundException(code)
+    }
+
+    private fun getCategoryByIdOrThrow(id: UUID): Category {
+        return categoryRepository.findByIdAndDeletedFalse(id) ?: throw CategoryNotFoundException(id)
     }
 }
 
@@ -211,7 +217,9 @@ class CategoryServiceImpl(
             throw CategoryHasProductsException(id)
         }
 
-        categoryRepository.trash(id)
+        if (!categoryRepository.trash(id)) {
+            throw CategoryAlreadyDeletedException(id)
+        }
     }
 
     private fun resolveParent(parentId: UUID?, excludeId: UUID?): Category? {

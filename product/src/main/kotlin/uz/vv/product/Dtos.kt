@@ -96,7 +96,6 @@ data class CategoryResponse(
     val deleted: Boolean
 )
 
-
 data class CategoryTreeResponse(
     val id: UUID?,
     val name: String,

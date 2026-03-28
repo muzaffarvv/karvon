@@ -1,4 +1,4 @@
-package uz.vv.product
+package uz.vv.order
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import org.slf4j.LoggerFactory
@@ -64,47 +64,12 @@ sealed class KarvonException(message: String? = null) : RuntimeException(message
 }
 
 
-class ProductNotFoundException(id: Any) : KarvonException("Product not found with id: $id") {
-    override fun errorType() = ErrorCode.PRODUCT_NOT_FOUND
+class OrderNotFoundException(id: Any) : KarvonException("Product not found with id: $id") {
+    override fun errorType() = ErrorCode.ORDER_NOT_FOUND
 }
 
-class ProductAlreadyDeletedException(id: Any) :
-    KarvonException("Product already deleted with id: $id") {
-    override fun errorType() = ErrorCode.PRODUCT_ALREADY_DELETED
-}
-
-
-class CategoryNotFoundException(id: Any) : KarvonException("Category not found with id: $id") {
-    override fun errorType() = ErrorCode.CATEGORY_NOT_FOUND
-}
-
-class CategoryAlreadyDeletedException(id: Any) : KarvonException("Category already deleted with id: $id") {
-    override fun errorType() = ErrorCode.PRODUCT_ALREADY_DELETED
-}
-
-class CategoryAlreadyExistsException(name: String) : KarvonException("Category already exists with name: $name") {
-    override fun errorType() = ErrorCode.CATEGORY_ALREADY_EXISTS
-}
-
-class CategoryHasChildrenException(id: Any) :
-    KarvonException("Category has children and cannot be deleted: $id") {
-    override fun errorType() = ErrorCode.CATEGORY_HAS_CHILDREN
-}
-
-class CategoryHasProductsException(id: Any) :
-    KarvonException("Category has products and cannot be deleted: $id") {
-    override fun errorType() = ErrorCode.CATEGORY_HAS_PRODUCTS
-}
-
-class CategoryCircularReferenceException(id: Any) :
-    KarvonException("Setting parent would create a circular reference for category: $id") {
-    override fun errorType() = ErrorCode.CATEGORY_CIRCULAR_REFERENCE
-}
-
-class DatabaseSequenceException(val sequenceName: String) :
-    KarvonException("Sequence error: $sequenceName") {
-    override fun errorType() = ErrorCode.DATABASE_SEQUENCE_ERROR
-    override fun getErrorMessageArguments(): Array<Any?> = arrayOf(sequenceName)
+class OrderItemNotFoundException(id: Any) : KarvonException("Order item not found with id: $id") {
+    override fun errorType() = ErrorCode.ORDER_ITEM_NOT_FOUND
 }
 
 
