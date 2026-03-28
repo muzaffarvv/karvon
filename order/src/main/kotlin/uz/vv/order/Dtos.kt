@@ -5,13 +5,13 @@ import java.time.Instant
 import java.util.UUID
 
 
-data class CreateOrderRequest(
+data class OrderCreateRequest(
     val userId: UUID,
     val orderNumber: String,
-    val items: List<CreateOrderItemRequest>
+    val items: List<OrderItemCreateRequest>
 )
 
-data class UpdateOrderRequest(
+data class OrderUpdateRequest(
     val status: OrderStatus? = null,
     val totalPrice: BigDecimal? = null
 )
@@ -37,13 +37,13 @@ data class OrderShortResponse(
 )
 
 
-data class CreateOrderItemRequest(
+data class OrderItemCreateRequest(
     val productId: UUID,
     val quantity: BigDecimal,
     val unitPrice: BigDecimal
 )
 
-data class UpdateOrderItemRequest(
+data class OrderItemUpdateRequest(
     val quantity: BigDecimal? = null,
     val unitPrice: BigDecimal? = null
 )
