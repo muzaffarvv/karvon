@@ -15,6 +15,7 @@ import java.util.UUID
 class ProductController(private val productService: ProductService) {
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @Valid @RequestBody request: ProductCreateRequest
     ): ResponseEntity<ResponseVO<ProductResponse>> {
@@ -58,6 +59,7 @@ class ProductController(private val productService: ProductService) {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(
         @PathVariable id: UUID
     ): ResponseEntity<ResponseVO<Nothing>> {
@@ -72,6 +74,7 @@ class ProductController(private val productService: ProductService) {
 class CategoryController(private val categoryService: CategoryService) {
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     fun create(
         @Valid @RequestBody request: CategoryCreateRequest
     ): ResponseEntity<ResponseVO<CategoryResponse>> {
@@ -119,6 +122,7 @@ class CategoryController(private val categoryService: CategoryService) {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun delete(
         @PathVariable id: UUID
     ): ResponseEntity<ResponseVO<Nothing>> {
