@@ -51,13 +51,28 @@ class BaseRepositoryImpl<T : BaseEntity>(
         findAll(isNotDeletedSpecification, pageable)
 }
 
+
 @Repository
 interface OrderRepository : BaseRepository<Order> {
 
+    fun findByOrderNumberAndDeletedFalse(orderNumber: String): Order?
+
+    fun existsByOrderNumberAndDeletedFalse(orderNumber: String): Boolean
+
+    fun findAllByStatusAndUserIdAndDeletedFalse(
+        status: OrderStatus,
+        userId: UUID,
+        pageable: Pageable
+    ): Page<Order>
 }
 
 
 @Repository
 interface OrderItemRepository : BaseRepository<OrderItem> {
 
+    fun findAllByOrderIdAndDeletedFalse(orderId: UUID, pageable: Pageable): Page<OrderItem>
+
+    fun findAllByOrderIdAndDeletedFalse(orderId: UUID): List<OrderItem>
+
+    fun deleteAllByOrderId(orderId: UUID)
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.time.Instant
 import java.util.Locale
+import java.util.UUID
 
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -64,11 +65,27 @@ sealed class KarvonException(message: String? = null) : RuntimeException(message
 }
 
 
-class OrderNotFoundException(id: Any) : KarvonException("Product not found with id: $id") {
+class OrderNotFoundException(id: UUID?) : KarvonException("Order not found with id: $id") {
     override fun errorType() = ErrorCode.ORDER_NOT_FOUND
 }
 
-class OrderItemNotFoundException(id: Any) : KarvonException("Order item not found with id: $id") {
+class OrderAlreadyExistsException(orderNumber: String) :
+    KarvonException("Order already exists with orderNumber: $orderNumber") {
+    override fun errorType() = ErrorCode.ORDER_ALREADY_EXISTS
+}
+
+class OrderCannotBeModifiedException(id: UUID, status: OrderStatus) :
+    KarvonException("Order [$id] cannot be modified because its status is: $status") {
+    override fun errorType() = ErrorCode.ORDER_CANNOT_BE_MODIFIED
+}
+
+class OrderCannotBeCancelledException(id: UUID, status: OrderStatus) :
+    KarvonException("Order [$id] cannot be cancelled because its status is: $status") {
+    override fun errorType() = ErrorCode.ORDER_CANNOT_BE_CANCELLED
+}
+
+
+class OrderItemNotFoundException(id: UUID) : KarvonException("Order item not found with id: $id") {
     override fun errorType() = ErrorCode.ORDER_ITEM_NOT_FOUND
 }
 
