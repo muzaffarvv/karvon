@@ -1,13 +1,17 @@
 package uz.vv.order
 
+import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.PositiveOrZero
 import java.math.BigDecimal
 import java.time.Instant
 import java.util.UUID
 
 
+// ─── Order Request DTOs ────────────────────────────────────────────────────────
+
 data class OrderCreateRequest(
     val userId: UUID,
+    @field:NotBlank(message = "Order number cannot be blank")
     @field:PositiveOrZero(message = "Order number cannot be negative")
     val orderNumber: String,
     val items: List<OrderItemCreateRequest>
@@ -23,6 +27,9 @@ data class OrderStatusUpdateRequest(
     val status: OrderStatus
 )
 
+
+// ─── Order Response DTOs ───────────────────────────────────────────────────────
+
 data class OrderFullResponse(
     val id: UUID,
     val userId: UUID,
@@ -31,6 +38,9 @@ data class OrderFullResponse(
     val status: OrderStatus,
     val items: List<OrderItemShortResponse>,
     val createdAt: Instant?,
+    val updatedAt: Instant?,
+    val createdBy: UUID?,
+    val updatedBy: UUID?,
 )
 
 data class OrderShortResponse(
@@ -40,6 +50,8 @@ data class OrderShortResponse(
     val status: OrderStatus
 )
 
+
+// ─── OrderItem Request DTOs ────────────────────────────────────────────────────
 
 data class OrderItemCreateRequest(
     val productId: UUID,
@@ -55,6 +67,9 @@ data class OrderItemUpdateRequest(
     @field:PositiveOrZero(message = "Unit price cannot be negative")
     val unitPrice: BigDecimal? = null
 )
+
+
+// ─── OrderItem Response DTOs ───────────────────────────────────────────────────
 
 data class OrderItemFullResponse(
     val id: UUID,

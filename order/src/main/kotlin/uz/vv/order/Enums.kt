@@ -6,11 +6,15 @@ enum class OrderStatus {
 }
 
 enum class ErrorCode(val code: Int) {
+
     ORDER_NOT_FOUND(101),
+    ORDER_ALREADY_EXISTS(102),
 
     ORDER_ITEM_NOT_FOUND(103),
+    ORDER_ITEM_ALREADY_EXISTS(104),
+
+    ORDER_CANNOT_BE_MODIFIED(105),
+    ORDER_CANNOT_BE_CANCELLED(106),
 
     INVALID_REQUEST(301),
-
-
 }

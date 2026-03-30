@@ -18,8 +18,8 @@ class OrderMapper(private val orderItemMapper: OrderItemMapper) {
         return order
     }
 
-    fun toResponse(order: Order, items: List<OrderItem>): OrderResponse {
-        return OrderResponse(
+    fun toFullResponse(order: Order, items: List<OrderItem>): OrderFullResponse {
+        return OrderFullResponse(
             id = order.id!!,
             userId = order.userId,
             orderNumber = order.orderNumber,
@@ -63,8 +63,8 @@ class OrderItemMapper {
         return orderItem
     }
 
-    fun toResponse(orderItem: OrderItem): OrderItemResponse {
-        return OrderItemResponse(
+    fun toFullResponse(orderItem: OrderItem): OrderItemFullResponse {
+        return OrderItemFullResponse(
             id = orderItem.id!!,
             orderId = orderItem.order.id!!,
             productId = orderItem.productId,
