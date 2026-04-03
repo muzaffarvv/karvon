@@ -7,6 +7,35 @@ import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 import java.util.UUID
 
+@Service
+class ProductClientService(
+    private val productClient: ProductClient
+) {
+
+    fun getProductOrThrow(productId: UUID): ProductResponse {
+        val response = productClient.getById(productId)
+
+        if (!response.success) {
+            val errorMsg = response.message ?: "External API error"
+            throw ProductServiceException("$errorMsg (Code: ${response.errorCode})")
+        }
+
+        return response.data
+            ?: throw ProductServiceException("Product not found with id: $productId")
+    }
+
+    fun validateProductActive(productId: UUID): ProductResponse {
+        val product = getProductOrThrow(productId)
+        if (!product.active) {
+            throw ProductServiceException("Product is not active: $productId")
+        }
+        if (product.stockQuantity <= 0) {
+            throw ProductServiceException("Product out of stock: $productId")
+        }
+        return product
+    }
+}
+
 
 interface OrderService {
     fun create(createDto: OrderCreateRequest): OrderFullResponse

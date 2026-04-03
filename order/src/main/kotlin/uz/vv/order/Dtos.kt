@@ -88,3 +88,34 @@ data class OrderItemShortResponse(
     val quantity: BigDecimal,
     val totalPrice: BigDecimal
 )
+
+
+// ─── Product Response DTOs ────────────────────────────────────────────────────
+
+
+data class ProductResponse(
+    val id: UUID?,
+    val name: String,
+    val code: String,
+    val description: String?,
+    val price: BigDecimal,
+    val stockQuantity: Int,
+    val active: Boolean,
+    val categoryId: UUID?,
+    val categoryName: String?,
+    val createdAt: Instant?,
+    val updatedAt: Instant?,
+    val deleted: Boolean
+)
+
+data class CategoryResponse(
+    val id: UUID?,
+    val name: String,
+    val description: String?,
+    val active: Boolean,
+    val parentId: UUID?,
+    val parentName: String?,
+    val createdAt: Instant?,
+    val updatedAt: Instant?,
+    val deleted: Boolean
+)
