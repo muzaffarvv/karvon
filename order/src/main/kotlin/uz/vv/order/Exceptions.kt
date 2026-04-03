@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.time.Instant
 import java.util.Locale
@@ -89,6 +90,9 @@ class OrderItemNotFoundException(id: UUID) : KarvonException("Order item not fou
     override fun errorType() = ErrorCode.ORDER_ITEM_NOT_FOUND
 }
 
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+class ProductServiceException(message: String) : RuntimeException(message)
+
 
 @RestControllerAdvice
 class GlobalExceptionHandler(private val messageSource: ResourceBundleMessageSource) {
@@ -126,3 +130,4 @@ class GlobalExceptionHandler(private val messageSource: ResourceBundleMessageSou
             .body(ResponseVO.error(message = "Internal server error"))
     }
 }
+

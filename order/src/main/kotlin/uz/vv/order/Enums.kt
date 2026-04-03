@@ -17,4 +17,5 @@ enum class ErrorCode(val code: Int) {
     ORDER_CANNOT_BE_CANCELLED(106),
 
     INVALID_REQUEST(301),
+    BAD_REQUEST(302)
 }
